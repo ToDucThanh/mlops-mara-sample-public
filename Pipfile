@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+black = "==23.3.0"
+mlflow = "==2.3.2"
+numpy = "==1.24.3"
+pyarrow = "==11.0.0"
+pyyaml = "==6.0"
+pandas = "==2.0.1"
+scikit-learn = "==1.2.2"
+xgboost = "==1.7.5"
+fastapi = "==0.95.1"
+pydantic = "==1.10.7"
+uvicorn = "==0.22.0"
+python-dotenv = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"

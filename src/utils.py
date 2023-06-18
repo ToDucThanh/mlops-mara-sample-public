@@ -1,9 +1,10 @@
 import logging
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
-
+load_dotenv()
 
 class AppPath:
     ROOT_DIR = Path(".")

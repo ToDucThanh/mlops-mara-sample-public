@@ -23,6 +23,7 @@ class ModelTrainer:
     def train_model(prob_config: ProblemConfig, model_params, add_captured_data=False):
         logging.info("start train_model")
         # init mlflow
+        
         mlflow.set_tracking_uri(AppConfig.MLFLOW_TRACKING_URI)
         mlflow.set_experiment(
             f"{prob_config.phase_id}_{prob_config.prob_id}_{ModelTrainer.EXPERIMENT_NAME}"
