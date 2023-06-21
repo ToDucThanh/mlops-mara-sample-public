@@ -101,11 +101,13 @@ class PredictorApi:
         async def predict(data: Data, request: Request):
             self._log_request(request)
             response = self.predictor.predict(data)
+        
             self._log_response(response)
             return response
 
     @staticmethod
     def _log_request(request: Request):
+        # print(request.client.host)
         pass
 
     @staticmethod
