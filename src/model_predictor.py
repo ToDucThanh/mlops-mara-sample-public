@@ -107,7 +107,6 @@ class PredictorApi:
 
     @staticmethod
     def _log_request(request: Request):
-        # print(request.client.host)
         pass
 
     @staticmethod
