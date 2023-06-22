@@ -26,15 +26,23 @@ class Data(BaseModel):
 
 
 class ModelPredictor:
-    def __init__(self, config_file_path):
-        with open(config_file_path, "r") as f:
-            self.config = yaml.safe_load(f)
-        logging.info(f"model-config: {self.config}")
+    def __init__(self, config_file_path_1, config_file_path_2):
+        with open(config_file_path_1, "r") as f:
+            self.config_1 = yaml.safe_load(f)
+        logging.info(f"model-config-1: {self.config_1}")
+
+        with open(config_file_path_2, "r") as f:
+            self.config_2 = yaml.safe_load(f)
+        logging.info(f"model-config-2: {self.config_2}")
 
         mlflow.set_tracking_uri(AppConfig.MLFLOW_TRACKING_URI)
 
-        self.prob_config = create_prob_config(
-            self.config["phase_id"], self.config["prob_id"]
+        self.prob_config_1 = create_prob_config(
+            self.config_1["phase_id"], self.config_1["prob_id"]
+        )
+
+        self.prob_config_2 = create_prob_config(
+            self.config_2["phase_id"], self.config_2["prob_id"]
         )
 
         # load category_index
@@ -118,18 +126,26 @@ class PredictorApi:
 
 
 if __name__ == "__main__":
-    default_config_path = (
+    config_path_1 = (
         AppPath.MODEL_CONFIG_DIR
         / ProblemConst.PHASE1
         / ProblemConst.PROB1
         / "model-1.yaml"
     ).as_posix()
+    
+    config_path_2 = (
+        AppPath.MODEL_CONFIG_DIR
+        / ProblemConst.PHASE2
+        / ProblemConst.PROB2
+        / "model-2.yaml"
+    ).as_posix()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config-path", type=str, default=default_config_path)
+    parser.add_argument("--config-path-1", type=str, default=config_path_1)
+    parser.add_argument("--config-path-2", type=str, default=config_path_2)
     parser.add_argument("--port", type=int, default=PREDICTOR_API_PORT)
     args = parser.parse_args()
 
-    predictor = ModelPredictor(config_file_path=args.config_path)
+    predictor = ModelPredictor(config_file_path_1=args.config_path_1, config_file_path_2=args.config_path_2)
     api = PredictorApi(predictor)
     api.run(port=args.port)
