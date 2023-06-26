@@ -1,0 +1,51 @@
+{
+    "id": "115",
+    "rows": [
+      [
+        "V1",
+        4.781942,
+        "V2",
+        "V8",
+        1335.02,
+        "V4",
+        "V4",
+        2.0,
+        "V2",
+        "V0",
+        4.0,
+        "V2",
+        35.689494,
+        "none",
+        "V1",
+        1.0,
+        "V2",
+        1.0,
+        "none",
+        "yes"
+      ]
+    ],
+
+    "columns": [
+      "feature1",
+      "feature2",
+      "feature3",
+      "feature4",
+      "feature5",
+      "feature6",
+      "feature7",
+      "feature8",
+      "feature9",
+      "feature10",
+      "feature11",
+      "feature12",
+      "feature13",
+      "feature14",
+      "feature15",
+      "feature16",
+      "feature17",
+      "feature18",
+      "feature19",
+      "feature20"      
+    ]
+  }
+  

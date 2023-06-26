@@ -124,7 +124,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+
 .venv
 env/
 venv/
@@ -197,3 +197,7 @@ poetry.toml
 mlruns
 test*
 *.DS_Store
+*.sh
+*.pkl
+log/*
+pycaret_test

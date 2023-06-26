@@ -46,39 +46,70 @@ class ModelPredictor:
         )
 
         # load category_index
-        self.category_index = RawDataProcessor.load_category_index(self.prob_config)
+        self.category_index_1 = RawDataProcessor.load_category_index(self.prob_config_1)
+        self.category_index_2 = RawDataProcessor.load_category_index(self.prob_config_2)
 
         # load model
-        model_uri = os.path.join(
-            "models:/", self.config["model_name"], str(self.config["model_version"])
+        model_uri_1 = os.path.join(
+            "models:/", self.config_1["model_name"], str(self.config_1["model_version"])
         )
-        self.model = mlflow.pyfunc.load_model(model_uri)
+        model_uri_2 = os.path.join(
+            "models:/", self.config_2["model_name"], str(self.config_2["model_version"])
+        )
+        self.model_1 = mlflow.pyfunc.load_model(model_uri_1)
+        self.model_2 = mlflow.pyfunc.load_model(model_uri_2)
 
     def detect_drift(self, feature_df) -> int:
         # watch drift between coming requests and training data
         time.sleep(0.02)
         return random.choice([0, 1])
 
-    def predict(self, data: Data):
+    def predict_1(self, data: Data):
         start_time = time.time()
 
         # preprocess
         raw_df = pd.DataFrame(data.rows, columns=data.columns)
         feature_df = RawDataProcessor.apply_category_features(
             raw_df=raw_df,
-            categorical_cols=self.prob_config.categorical_cols,
-            category_index=self.category_index,
+            categorical_cols=self.prob_config_1.categorical_cols,
+            category_index=self.category_index_1,
         )
         # save request data for improving models
         ModelPredictor.save_request_data(
-            feature_df, self.prob_config.captured_data_dir, data.id
+            feature_df, self.prob_config_1.captured_data_dir, data.id
         )
 
-        prediction = self.model.predict(feature_df)
+        prediction = self.model_1.predict(feature_df)
         is_drifted = self.detect_drift(feature_df)
 
         run_time = round((time.time() - start_time) * 1000, 0)
-        logging.info(f"prediction takes {run_time} ms")
+        logging.info(f"Problem 1: prediction takes {run_time} ms")
+        return {
+            "id": data.id,
+            "predictions": prediction.tolist(),
+            "drift": is_drifted,
+        }
+
+    def predict_2(self, data: Data):
+        start_time = time.time()
+
+        # preprocess
+        raw_df = pd.DataFrame(data.rows, columns=data.columns)
+        feature_df = RawDataProcessor.apply_category_features(
+            raw_df=raw_df,
+            categorical_cols=self.prob_config_2.categorical_cols,
+            category_index=self.category_index_2,
+        )
+        # save request data for improving models
+        ModelPredictor.save_request_data(
+            feature_df, self.prob_config_2.captured_data_dir, data.id
+        )
+
+        prediction = self.model_2.predict(feature_df)
+        is_drifted = self.detect_drift(feature_df)
+
+        run_time = round((time.time() - start_time) * 1000, 0)
+        logging.info(f"Problem 2: prediction takes {run_time} ms")
         return {
             "id": data.id,
             "predictions": prediction.tolist(),
@@ -108,7 +139,14 @@ class PredictorApi:
         @self.app.post("/phase-1/prob-1/predict")
         async def predict(data: Data, request: Request):
             self._log_request(request)
-            response = self.predictor.predict(data)
+            response = self.predictor.predict_1(data)
+            self._log_response(response)
+            return response
+
+        @self.app.post("/phase-1/prob-2/predict")
+        async def predict(data: Data, request: Request):
+            self._log_request(request)
+            response = self.predictor.predict_2(data)
         
             self._log_response(response)
             return response

@@ -5,10 +5,18 @@ teardown:
 
 # mlflow
 mlflow_up:
-	docker-compose -f deployment/mlflow/docker-compose.yml up -d
+	docker compose -f deployment/mlflow/docker-compose.yml up -d
 
 mlflow_down:
-	docker-compose -f deployment/mlflow/docker-compose.yml down
+	docker compose -f deployment/mlflow/docker-compose.yml down
+
+
+# nginx
+nginx_up:
+	docker compose -f nginx/docker-compose.yml up --build -d
+
+nginx_down:
+	docker compose -f nginx/docker-compose.yml down
 
 # predictor
 predictor_up:
@@ -24,3 +32,4 @@ predictor_restart:
 predictor_curl:
 	curl -X POST http://localhost:5040/phase-1/prob-1/predict -H "Content-Type: application/json" -d @data/curl/phase-1/prob-1/payload-1.json
 	curl -X POST http://localhost:5040/phase-1/prob-1/predict -H "Content-Type: application/json" -d @data/curl/phase-1/prob-1/payload-2.json
+	curl -X POST http://localhost:5040/phase-1/prob-2/predict -H "Content-Type: application/json" -d @data/curl/phase-1/prob-2/payload-1.json

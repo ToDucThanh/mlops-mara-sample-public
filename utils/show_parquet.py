@@ -5,7 +5,8 @@ import pandas as pd
 
 def show_parquet(path: str):
     df = pd.read_parquet(path=path)
-    print(df)
+    print(df.iloc[0, 0:8])
+
 
 
 # Usage: python utils/show_parquet.py data/train_data/phase-1/prob-1/test_x.parquet

@@ -12,3 +12,4 @@ pydantic==1.10.7
 uvicorn==0.22.0
 
 python-dotenv
+evidently
